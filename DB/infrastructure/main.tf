@@ -11,7 +11,7 @@ terraform {
   backend "s3" {
     bucket = "security-CRM-bucket"
     key = "infrastructure/state-files"
-    region = var.AWS_REGION
+    region = "eu-west-1"
   }
 }
 
