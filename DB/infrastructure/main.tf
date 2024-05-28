@@ -9,7 +9,7 @@ terraform {
   required_version = ">= 1.7.4"
 
   backend "s3" {
-    bucket = "arn:aws:s3:::security-crm-bucket"
+    bucket = "security-crm-bucket"
     key = "infrastructure/state-files"
     region = "eu-west-1"
   }
