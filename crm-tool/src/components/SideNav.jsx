@@ -9,9 +9,19 @@ import {
 import logo from "../assets/logo.svg";
 import home from "../assets/home.svg";
 import analytics from "../assets/analytics.svg";
+import { useNavigate } from "react-router-dom";
 
 const SideNav = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const navigate = useNavigate();
+
+  const handleDashboardNav = async () => {
+    navigate(`/`);
+  };
+
+  const handleAnalyticsNav = async () => {
+    navigate(`/dashboard`);
+  };
 
   return (
     <Flex
@@ -45,11 +55,21 @@ const SideNav = () => {
             {colorMode === "light" ? "Dark Mode" : "Light Mode"}
           </Button>
           <VStack spacing="4" align="start">
-            <Flex align="center" gap="1vw" cursor="pointer">
+            <Flex
+              align="center"
+              gap="1vw"
+              cursor="pointer"
+              onClick={handleDashboardNav}
+            >
               <img src={home} alt="home icon" />
               <Text color="brand.white">Dashboard</Text>
             </Flex>
-            <Flex align="center" gap="1vw" cursor="pointer">
+            <Flex
+              align="center"
+              gap="1vw"
+              cursor="pointer"
+              onClick={handleAnalyticsNav}
+            >
               <img src={analytics} alt="analytics icon" />
               <Text color="brand.white">Analytics</Text>
             </Flex>

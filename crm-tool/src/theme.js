@@ -17,7 +17,7 @@ const theme = extendTheme({
   },
   fonts: {
     body: "'Roboto', sans-serif",
-    heading: "'Russo One', sans-serif",
+    heading: "'Roboto', sans-serif",
   },
 });
 
