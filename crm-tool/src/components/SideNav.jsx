@@ -85,7 +85,9 @@ const SideNav = () => {
           justify="center"
         >
           <Flex align="center" color="brand.white" fontFamily="heading">
-            <Text>LOGOUT</Text>
+            <Text color="brand.white" fontWeight="bold">
+              LOGOUT
+            </Text>
           </Flex>
         </Button>
       </Flex>
