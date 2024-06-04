@@ -101,3 +101,11 @@ Thumbs.db
 .DS_Store
 
 .vs
+build/
+dist/
+node_modules/
+awsconfiguration.json
+.secret-*
+**.sample
+#amplify-do-not-edit-end
+package-lock.json
