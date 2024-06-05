@@ -1,19 +1,18 @@
 import axios from "axios";
-import { fetchAuthSession } from 'aws-amplify/auth'
+import { fetchAuthSession } from "aws-amplify/auth";
 
 class OpportunityService {
 	constructor() {
 		this.opportunityId = null;
 		this.api = axios.create({
-			baseURL:
-				"https://qjf50l3iz6.execute-api.eu-west-1.amazonaws.com/Production/api",
+			baseURL: " https://localhost:7173/api",
 			withCredentials: false,
 		});
 
 		this.api.interceptors.request.use(
 			async (config) => {
 				const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
-						config.headers.Authorization = `Bearer ${idToken}`;
+				config.headers.Authorization = `Bearer ${idToken}`;
 				return config;
 			},
 			(error) => {

@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Box, Flex, Grid, GridItem, useColorMode } from "@chakra-ui/react";
+import {
+	Box,
+	Flex,
+	Grid,
+	GridItem,
+	useColorMode,
+	Skeleton,
+} from "@chakra-ui/react";
 import SideNav from "../../components/SideNav";
 import { calculateStatistics, calculateMonthlyRevenue } from "./dashboardUtils";
 import "./DashboardStyles.css";
@@ -7,8 +14,10 @@ import { Bar, Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import opportunityService from "../../services/opportunityService";
 Chart.register(...registerables);
+
 const Dashboard = () => {
 	const { colorMode } = useColorMode();
+	const [loading, setLoading] = useState(true);
 	const [opportunities, setOpportunities] = useState([]);
 
 	const user = {
@@ -19,15 +28,13 @@ const Dashboard = () => {
 	useEffect(() => {
 		async function fetchSalesOpportunities() {
 			try {
-				const token = localStorage.getItem(
-					"CognitoIdentityServiceProvider.3ch5g4s7hkbla05jmnhrtkauar.google_100017168842405658255.idToken"
-				);
-				console.log("Token:", token);
 				const opportunities =
 					await opportunityService.fetchSalesOpportunities();
 				setOpportunities(opportunities);
 			} catch (error) {
 				console.error("Error fetching sales opportunities:", error);
+			} finally {
+				setLoading(false);
 			}
 		}
 
@@ -110,30 +117,62 @@ const Dashboard = () => {
 				<Flex p={4} justify="space-between">
 					<Box className="metric-box" mr={2}>
 						<h2 size="sm">Predicted Revenue</h2>
-						<h4 size="lg">R{statistics?.totalRevenue}</h4>
+						<h4 size="lg">
+							{loading ? (
+								<Skeleton width="100px" height="20px" />
+							) : (
+								`R${statistics?.totalRevenue}`
+							)}
+						</h4>
 					</Box>
 					<Box className="metric-box" mr={2}>
 						<h2 size="sm">Win/Loss Ratio</h2>
-						<h4 size="lg">{statistics?.winLossRatio}</h4>
+						<h4 size="lg">
+							{loading ? (
+								<Skeleton width="100px" height="20px" />
+							) : (
+								statistics?.winLossRatio
+							)}
+						</h4>
 					</Box>
 					<Box className="metric-box">
 						<h2 size="sm">Active Opportunities</h2>
-						<h4 size="lg">{statistics?.activeOpportunities}</h4>
+						<h4 size="lg">
+							{loading ? (
+								<Skeleton width="100px" height="20px" />
+							) : (
+								statistics?.activeOpportunities
+							)}
+						</h4>
 					</Box>
 					<Box className="metric-box">
 						<h2 size="sm">Average Deal Size</h2>
-						<h4 size="lg">R{statistics.averageDealSize}</h4>
+						<h4 size="lg">
+							{loading ? (
+								<Skeleton width="100px" height="20px" />
+							) : (
+								`R${statistics?.averageDealSize}`
+							)}
+						</h4>
 					</Box>
 				</Flex>
 
 				<Grid className="key-stat-grid">
 					<GridItem className="key-stat-item">
 						<h2 size="md">Pipeline Distribution</h2>
-						<Bar data={pipelineStageData} />
+						{loading ? (
+							<Skeleton height="200px" />
+						) : (
+							<Bar data={pipelineStageData} />
+						)}
 					</GridItem>
 					<GridItem className="key-stat-item">
 						<h2 size="md">Monthly Revenue Trend</h2>
-						<Line data={monthlyRevenueData} />
+						{loading ? (
+							<Skeleton height="200px" />
+						) : (
+							<Line data={monthlyRevenueData} />
+						)}
 					</GridItem>
 				</Grid>
 			</Flex>
