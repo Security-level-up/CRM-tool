@@ -20,7 +20,7 @@ const Dashboard = () => {
 		async function fetchSalesOpportunities() {
 			try {
 				const token = localStorage.getItem(
-					"CognitoIdentityServiceProvider.1dltou4a7b6tqnmk592sr2meu6.google_100017168842405658255.idToken"
+					"CognitoIdentityServiceProvider.3ch5g4s7hkbla05jmnhrtkauar.google_100017168842405658255.idToken"
 				);
 				console.log("Token:", token);
 				const opportunities =
