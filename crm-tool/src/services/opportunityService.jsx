@@ -38,8 +38,16 @@ class OpportunityService {
 	}
 
 	async fetchSalesOpportunities() {
+		const session = await Auth.currentSession();
+		const idToken = session.getIdToken().getJwtToken();
+		console.log("id token", idToken);
 		try {
-			const response = await this.api.get("api/SalesOpportunities");
+			const headers = {
+				Authorization: `Bearer ${idToken}`,
+			};
+			const response = await this.api.get("api/SalesOpportunities", {
+				headers,
+			});
 			return response.data;
 		} catch (error) {
 			console.error("Error fetching sales opportunities:", error);
