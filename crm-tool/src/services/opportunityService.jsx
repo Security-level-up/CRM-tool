@@ -1,19 +1,25 @@
 import axios from "axios";
-
+import { Auth } from "aws-amplify";
 class OpportunityService {
 	constructor() {
 		this.opportunityId = null;
 		this.api = axios.create({
 			baseURL:
 				"https://qjf50l3iz6.execute-api.eu-west-1.amazonaws.com/Production",
+			withCredentials: false,
 		});
+
 		this.api.interceptors.request.use(
-			(config) => {
-				const token = localStorage.getItem(
-					"CognitoIdentityServiceProvider.1dltou4a7b6tqnmk592sr2meu6.google_100017168842405658255.idToken"
-				);
-				if (token) {
-					config.headers.Authorization = `Bearer ${token}`;
+			async (config) => {
+				try {
+					const session = await Auth.currentSession();
+					const idToken = session.getIdToken().getJwtToken();
+
+					if (idToken) {
+						config.headers.Authorization = `Bearer ${idToken}`;
+					}
+				} catch (error) {
+					console.error("Error fetching the token", error);
 				}
 				return config;
 			},
