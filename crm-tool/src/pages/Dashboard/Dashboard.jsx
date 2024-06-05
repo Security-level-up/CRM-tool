@@ -6,6 +6,7 @@ import {
 	GridItem,
 	useColorMode,
 	Skeleton,
+	Heading,
 } from "@chakra-ui/react";
 import SideNav from "../../components/SideNav";
 import { calculateStatistics, calculateMonthlyRevenue } from "./dashboardUtils";
@@ -21,7 +22,6 @@ const Dashboard = () => {
 	const [opportunities, setOpportunities] = useState([]);
 
 	const user = {
-		name: "John Doe",
 		role: "Administrator",
 	};
 
@@ -110,8 +110,13 @@ const Dashboard = () => {
 					color={colorMode === "light" ? "white" : "black"}
 				>
 					<Box>
-						<h2 size="md">Welcome, {user.name}!</h2>
-						<h4 size="sm">{user.role}</h4>
+						<Heading as="h2" size="xl">
+							Welcome
+						</Heading>
+
+						<Heading as="h4" size="sm">
+							{user.role}
+						</Heading>
 					</Box>
 				</Flex>
 				<Flex p={4} justify="space-between">
