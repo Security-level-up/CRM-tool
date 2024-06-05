@@ -14,16 +14,35 @@ import "./DashboardStyles.css";
 import { Bar, Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import opportunityService from "../../services/opportunityService";
+import { fetchAuthSession } from "aws-amplify/auth";
 Chart.register(...registerables);
 
 const Dashboard = () => {
 	const { colorMode } = useColorMode();
 	const [loading, setLoading] = useState(true);
 	const [opportunities, setOpportunities] = useState([]);
+	const [userRole, setUserRole] = useState(null);
 
-	const user = {
-		role: "Administrator",
-	};
+	useEffect(() => {
+		const fetchUserRole = async () => {
+			try {
+				const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+
+				if (!idToken) {
+					throw new Error("ID token not found.");
+				}
+
+				const tokenParts = idToken.split(".");
+				const payload = JSON.parse(atob(tokenParts[1]));
+				const fetchedUserRole = payload["cognito:groups"][1];
+				setUserRole(fetchedUserRole);
+			} catch (error) {
+				console.error("Error retrieving user role:", error);
+			}
+		};
+
+		fetchUserRole();
+	}, []);
 
 	useEffect(() => {
 		async function fetchSalesOpportunities() {
@@ -115,7 +134,7 @@ const Dashboard = () => {
 						</Heading>
 
 						<Heading as="h4" size="sm">
-							{user.role}
+							{userRole}
 						</Heading>
 					</Box>
 				</Flex>
