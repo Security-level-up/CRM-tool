@@ -5,7 +5,8 @@ class OpportunityService {
 	constructor() {
 		this.opportunityId = null;
 		this.api = axios.create({
-			baseURL: " https://localhost:7173/api",
+			baseURL:
+				"https://qjf50l3iz6.execute-api.eu-west-1.amazonaws.com/Production/api",
 			withCredentials: false,
 		});
 
