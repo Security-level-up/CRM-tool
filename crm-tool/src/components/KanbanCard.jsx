@@ -14,9 +14,26 @@ const KanbanCard = ({ cardDetails, index }) => {
     navigate(`/viewOpp`, { state: { cardDetails } });
   };
 
+  const getBoxShadow = (stage) => {
+    switch (stage) {
+      case 1:
+        return "custom-orange";
+      case 2:
+        return "custom-maroon";
+      case 3:
+        return "custom-red";
+      case 4:
+        return "custom-purple";
+      case 5:
+        return "custom-navy";
+      default:
+        return "";
+    }
+  };
+
   return (
     <Draggable
-      draggableId={cardDetails.OpportunityID.toString()}
+      draggableId={cardDetails.opportunityID.toString()}
       index={index}
       gap="2vh"
     >
@@ -34,15 +51,14 @@ const KanbanCard = ({ cardDetails, index }) => {
           cursor="pointer"
           padding="1vh"
           gap="1vh"
-          boxShadow="custom-orange"
+          boxShadow={getBoxShadow(cardDetails.stage)}
           onClick={() => openPopUp(cardDetails)}
-          className={cardDetails.Stage}
         >
           <Box>
-            <h4 className="title">{cardDetails.Title}</h4>
+            <h4 className="title">{cardDetails.title}</h4>
           </Box>
           <Box>
-            <p className="text">{cardDetails.Amount}</p>
+            <p className="text">{cardDetails.amount}</p>
           </Box>
         </Flex>
       )}

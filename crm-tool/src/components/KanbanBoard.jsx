@@ -5,7 +5,9 @@ import KanbanCard from "../components/KanbanCard";
 import "./KanbanBoard.css";
 
 const KanbanBoard = ({ data }) => {
+  console.log(data);
   const onDragEnd = async (result) => {
+    //update stage with patch endpoint
     console.log(result);
   };
   return (
@@ -37,19 +39,18 @@ const KanbanBoard = ({ data }) => {
                     flexDir="column"
                     justify="center"
                     align="center"
-                    padding="1vh"
                   >
                     {data
-                      .filter((cardDetails) => cardDetails.Stage === 1)
+                      .filter((cardDetails) => cardDetails.stage === 1)
                       .map((cardDetails, index) => (
                         <KanbanCard
-                          key={cardDetails.OpportunityID}
+                          key={cardDetails.opportunityID}
                           cardDetails={cardDetails}
                           index={index}
                         />
                       ))}
 
-                    {data.filter((cardDetails) => cardDetails.Stage === 1)
+                    {data.filter((cardDetails) => cardDetails.stage === 1)
                       .length === 0 && (
                       <Box className="placeholder">No items to display</Box>
                     )}
@@ -71,32 +72,36 @@ const KanbanBoard = ({ data }) => {
               borderRadius="1vh"
             >
               <Heading size="md" color="white">
-                NEGOTIATION
+                PROPOSAL
               </Heading>
             </Flex>
             <Flex p="1vh" height="70vh" flexDir="column" gap="2vh">
               <Droppable droppableId="2">
                 {(provided) => (
-                  <Box
+                  <Flex
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                     w="100%"
+                    gap="2vh"
+                    flexDir="column"
+                    justify="center"
+                    align="center"
                   >
                     {data
-                      .filter((cardDetails) => cardDetails.Stage === 2)
+                      .filter((cardDetails) => cardDetails.stage === 2)
                       .map((cardDetails, index) => (
                         <KanbanCard
-                          key={cardDetails.OpportunityID}
+                          key={cardDetails.opportunityID}
                           cardDetails={cardDetails}
                           index={index}
                         />
                       ))}
                     {provided.placeholder}
-                    {data.filter((cardDetails) => cardDetails.Stage === 2)
+                    {data.filter((cardDetails) => cardDetails.stage === 2)
                       .length === 0 && (
                       <Box className="placeholder">No items to display</Box>
                     )}
-                  </Box>
+                  </Flex>
                 )}
               </Droppable>
             </Flex>
@@ -113,32 +118,36 @@ const KanbanBoard = ({ data }) => {
               borderRadius="1vh"
             >
               <Heading size="md" color="white">
-                PROPOSAL
+                NEGOTIATION
               </Heading>
             </Flex>
             <Flex p="1vh" height="70vh" flexDir="column" gap="2vh">
               <Droppable droppableId="3">
                 {(provided) => (
-                  <Box
+                  <Flex
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                     w="100%"
+                    gap="2vh"
+                    flexDir="column"
+                    justify="center"
+                    align="center"
                   >
                     {data
-                      .filter((cardDetails) => cardDetails.Stage === 3)
+                      .filter((cardDetails) => cardDetails.stage === 3)
                       .map((cardDetails, index) => (
                         <KanbanCard
-                          key={cardDetails.OpportunityID}
+                          key={cardDetails.opportunityID}
                           cardDetails={cardDetails}
                           index={index}
                         />
                       ))}
                     {provided.placeholder}
-                    {data.filter((cardDetails) => cardDetails.Stage === 3)
+                    {data.filter((cardDetails) => cardDetails.stage === 3)
                       .length === 0 && (
                       <Box className="placeholder">No items to display</Box>
                     )}
-                  </Box>
+                  </Flex>
                 )}
               </Droppable>
             </Flex>
@@ -160,26 +169,30 @@ const KanbanBoard = ({ data }) => {
             <Flex p="1vh" height="70vh" flexDir="column" gap="2vh">
               <Droppable droppableId="4">
                 {(provided) => (
-                  <Box
+                  <Flex
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                     w="100%"
+                    gap="2vh"
+                    flexDir="column"
+                    justify="center"
+                    align="center"
                   >
                     {data
-                      .filter((cardDetails) => cardDetails.Stage === 4)
+                      .filter((cardDetails) => cardDetails.stage === 4)
                       .map((cardDetails, index) => (
                         <KanbanCard
-                          key={cardDetails.OpportunityID}
+                          key={cardDetails.opportunityID}
                           cardDetails={cardDetails}
                           index={index}
                         />
                       ))}
                     {provided.placeholder}
-                    {data.filter((cardDetails) => cardDetails.Stage === 4)
+                    {data.filter((cardDetails) => cardDetails.stage === 4)
                       .length === 0 && (
                       <Box className="placeholder">No items to display</Box>
                     )}
-                  </Box>
+                  </Flex>
                 )}
               </Droppable>
             </Flex>
@@ -201,26 +214,30 @@ const KanbanBoard = ({ data }) => {
             <Flex p="1vh" height="70vh" flexDir="column" gap="2vh">
               <Droppable droppableId="5">
                 {(provided) => (
-                  <Box
+                  <Flex
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                     w="100%"
+                    gap="2vh"
+                    flexDir="column"
+                    justify="center"
+                    align="center"
                   >
                     {data
-                      .filter((cardDetails) => cardDetails.Stage === 5)
+                      .filter((cardDetails) => cardDetails.stage === 5)
                       .map((cardDetails, index) => (
                         <KanbanCard
-                          key={cardDetails.OpportunityID}
+                          key={cardDetails.opportunityID}
                           cardDetails={cardDetails}
                           index={index}
                         />
                       ))}
                     {provided.placeholder}
-                    {data.filter((cardDetails) => cardDetails.Stage === 5)
+                    {data.filter((cardDetails) => cardDetails.stage === 5)
                       .length === 0 && (
                       <Box className="placeholder">No items to display</Box>
                     )}
-                  </Box>
+                  </Flex>
                 )}
               </Droppable>
             </Flex>
