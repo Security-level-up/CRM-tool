@@ -3,62 +3,31 @@ import SideNav from "../components/SideNav";
 import KanbanBoard from "../components/KanbanBoard";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Flex, useColorMode, Button } from "@chakra-ui/react";
+import { Flex, useColorMode, Button, Skeleton } from "@chakra-ui/react";
+import opportunityService from "../services/opportunityService";
 import add_circle from "../assets/add_circle.svg";
 
 const Pipeline = () => {
   const navigate = useNavigate();
-  // const [opportunities, setOpportunities] = useState([]);
-  useEffect(() => {
-    // Fetch opportunities when the component mounts
-    const fetchOpportunities = async () => {
-      // try {
-      //   const data = await opportunityService.fetchOpportunities();
-      //   setOpportunities(data);
-      // } catch (error) {
-      //   console.error('Error fetching opportunities:', error);
-      // }
-    };
-
-    fetchOpportunities();
-  }, []);
-  const mockData = [
-    {
-      OpportunityID: 1,
-      Title: "New Client 1",
-      Amount: "$5000",
-      DateCreated: "2024-01-01",
-      DateClosed: "2024-01-15",
-      ProbOfCompletion: "60%",
-      Stage: 1,
-      Notes: "Initial contact made. Awaiting response.",
-      AssignedTo: "John Doe",
-    },
-    {
-      OpportunityID: 2,
-      Title: "New Client 2",
-      Amount: "$5000",
-      DateCreated: "2024-01-01",
-      DateClosed: "2024-01-15",
-      ProbOfCompletion: "60%",
-      Stage: 2,
-      Notes: "Initial contact made. Awaiting response.",
-      AssignedTo: "Jane Doe",
-    },
-    {
-      OpportunityID: 3,
-      Title: "New Client 3",
-      Amount: "$10500",
-      DateCreated: "2024-01-01",
-      DateClosed: "2024-01-15",
-      ProbOfCompletion: "60%",
-      Stage: 2,
-      Notes: "Initial contact made. Awaiting response.",
-      AssignedTo: "John Doe",
-    },
-  ];
-  const [data] = useState(mockData);
   const { colorMode } = useColorMode();
+  const [loading, setLoading] = useState(true);
+  const [opportunities, setOpportunities] = useState([]);
+  useEffect(() => {
+    async function fetchSalesOpportunities() {
+      try {
+        const opportunities =
+          await opportunityService.fetchSalesOpportunities();
+        console.log(opportunities);
+        setOpportunities(opportunities);
+      } catch (error) {
+        console.error("Error fetching sales opportunities:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSalesOpportunities();
+  }, []);
 
   const handleNew = () => {
     navigate(`/NewOpp`);
@@ -88,7 +57,11 @@ const Pipeline = () => {
             Add New
           </Button>
         </Flex>
-        <KanbanBoard data={data} />
+        {loading ? (
+          <Skeleton width="100px" height="20px" />
+        ) : (
+          <KanbanBoard data={opportunities} />
+        )}
       </Flex>
     </Flex>
   );
