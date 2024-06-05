@@ -1,26 +1,19 @@
 import axios from "axios";
-import { Auth } from "aws-amplify";
+import { fetchAuthSession } from 'aws-amplify/auth'
+
 class OpportunityService {
 	constructor() {
 		this.opportunityId = null;
 		this.api = axios.create({
 			baseURL:
-				"https://qjf50l3iz6.execute-api.eu-west-1.amazonaws.com/Production",
+				"https://qjf50l3iz6.execute-api.eu-west-1.amazonaws.com/Production/api",
 			withCredentials: false,
 		});
 
 		this.api.interceptors.request.use(
 			async (config) => {
-				try {
-					const session = await Auth.currentSession();
-					const idToken = session.getIdToken().getJwtToken();
-
-					if (idToken) {
+				const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
 						config.headers.Authorization = `Bearer ${idToken}`;
-					}
-				} catch (error) {
-					console.error("Error fetching the token", error);
-				}
 				return config;
 			},
 			(error) => {
@@ -38,14 +31,13 @@ class OpportunityService {
 	}
 
 	async fetchSalesOpportunities() {
-		const session = await Auth.currentSession();
-		const idToken = session.getIdToken().getJwtToken();
-		console.log("id token", idToken);
+		const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+
 		try {
 			const headers = {
 				Authorization: `Bearer ${idToken}`,
 			};
-			const response = await this.api.get("api/SalesOpportunities", {
+			const response = await this.api.get("/SalesOpportunities", {
 				headers,
 			});
 			return response.data;
