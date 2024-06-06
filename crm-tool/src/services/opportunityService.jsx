@@ -6,7 +6,7 @@ class OpportunityService {
     this.opportunityId = null;
 
     this.api = axios.create({
-      baseURL: "https://localhost:7173/api",
+      baseURL: import.meta.env.VITE_BASE_API_URL,
       withCredentials: false,
     });
 
