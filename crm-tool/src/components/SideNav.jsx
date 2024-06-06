@@ -10,10 +10,15 @@ import logo from "../assets/logo.svg";
 import home from "../assets/home.svg";
 import analytics from "../assets/analytics.svg";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "aws-amplify/auth";
 
 const SideNav = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+  };
 
   const handleDashboardNav = async () => {
     navigate(`/`);
@@ -83,12 +88,9 @@ const SideNav = () => {
           backgroundColor="brand.orange"
           align="center"
           justify="center"
+          onClick={handleLogout}
         >
-          <Flex align="center" color="brand.white" fontFamily="heading">
-            <Text color="brand.white" fontWeight="bold">
-              LOGOUT
-            </Text>
-          </Flex>
+          <Text color="brand.white">LOGOUT</Text>
         </Button>
       </Flex>
     </Flex>
