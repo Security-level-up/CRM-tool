@@ -16,6 +16,20 @@ const Pipeline = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const postLogin = async () => {
+      try {
+        await opportunityService.postLoginInfo();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    postLogin();
+  }, []); // Empty dependency array ensures this runs once on component mount
+
+  useEffect(() => {
     const fetchUserRole = async () => {
       try {
         const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
