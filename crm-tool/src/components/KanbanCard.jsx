@@ -1,17 +1,40 @@
 /* eslint-disable react/prop-types */
 import { Box, Flex } from "@chakra-ui/react";
 import { Draggable } from "react-beautiful-dnd";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import opportunityService from "../services/opportunityService";
+import { fetchAuthSession } from "aws-amplify/auth";
 import "./KanbanCard.css";
 
 const KanbanCard = ({ cardDetails, index }) => {
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+
+        if (!idToken) {
+          throw new Error("ID token not found.");
+        }
+
+        const tokenParts = idToken.split(".");
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const fetchedUserRole = payload["cognito:groups"][1];
+        setUserRole(fetchedUserRole);
+      } catch (error) {
+        console.error("Error retrieving user role:", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
 
   const openPopUp = (cardDetails) => {
-    console.log("clickedOnCard");
-    // opportunityService.setOpportunityId(cardDetails.OpportunityID);
-    navigate(`/viewOpp`, { state: { cardDetails } });
+    if (userRole === "SalesRep" || userRole === "Manager") {
+      navigate(`/viewOpp`, { state: { cardDetails } });
+    }
   };
 
   const getBoxShadow = (stage) => {

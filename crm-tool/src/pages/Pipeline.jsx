@@ -6,28 +6,74 @@ import { useNavigate } from "react-router-dom";
 import { Flex, useColorMode, Button, Skeleton } from "@chakra-ui/react";
 import opportunityService from "../services/opportunityService";
 import add_circle from "../assets/add_circle.svg";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 const Pipeline = () => {
   const navigate = useNavigate();
   const { colorMode } = useColorMode();
-  const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
   const [opportunities, setOpportunities] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    async function fetchSalesOpportunities() {
+    const fetchUserRole = async () => {
+      try {
+        const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+
+        if (!idToken) {
+          throw new Error("ID token not found.");
+        }
+
+        const tokenParts = idToken.split(".");
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const fetchedUserRole = payload["cognito:groups"][1];
+        setUserRole(fetchedUserRole);
+      } catch (error) {
+        console.error("Error retrieving user role:", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
+
+  useEffect(() => {
+    const fetchSalesOpportunities = async () => {
       try {
         const opportunities =
           await opportunityService.fetchSalesOpportunities();
-        console.log(opportunities);
         setOpportunities(opportunities);
       } catch (error) {
         console.error("Error fetching sales opportunities:", error);
       } finally {
         setLoading(false);
       }
-    }
+    };
 
-    fetchSalesOpportunities();
-  }, []);
+    const fetchSalesOpportunitiesCurrentUser = async () => {
+      try {
+        const opportunities = await opportunityService.fetchOpportunityById();
+        setOpportunities(opportunities);
+      } catch (error) {
+        console.error(
+          "Error fetching current user's sales opportunities:",
+          error
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userRole) {
+      if (userRole === "Manager" || userRole === "GeneralUser") {
+        console.log("user is manager or general user");
+        fetchSalesOpportunities();
+      } else if (userRole === "SalesRep") {
+        console.log("user is salesRep");
+        // RETURNING 404
+        fetchSalesOpportunitiesCurrentUser();
+      }
+    }
+  }, [userRole]);
 
   const handleNew = () => {
     navigate(`/NewOpp`);

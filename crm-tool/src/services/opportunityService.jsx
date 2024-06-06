@@ -30,6 +30,7 @@ class OpportunityService {
     return this.opportunityId;
   }
 
+  // Fetch opportunities
   async fetchSalesOpportunities() {
     console.log("calling endpoint");
     const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
@@ -38,25 +39,7 @@ class OpportunityService {
       const headers = {
         Authorization: `Bearer ${idToken}`,
       };
-      const response = await this.api.get("/SalesOpportunities", {
-        headers,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching sales opportunities:", error);
-      throw error;
-    }
-  }
-
-  // Fetch opportunities
-  async fetchOpportunities() {
-    const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
-
-    try {
-      const headers = {
-        Authorization: `Bearer ${idToken}`,
-      };
-      const response = await this.api.get("/opportunities", {
+      const response = await this.api.get("/api/SalesOpportunities", {
         headers,
       });
       return response.data;
@@ -67,18 +50,21 @@ class OpportunityService {
   }
 
   // Fetch a single opportunity by ID
-  async fetchOpportunityById(id) {
+  async fetchOpportunityById() {
     const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
     try {
       const headers = {
         Authorization: `Bearer ${idToken}`,
       };
-      const response = await this.api.get(`/opportunities/${id}`, {
-        headers,
-      });
+      const response = await this.api.get(
+        `/api/SalesOpportunities/byCurrentUser`,
+        {
+          headers,
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error(`Error fetching opportunity with ID ${id}:`, error);
+      console.error(`Error fetching opportunity for current user:`, error);
       throw error;
     }
   }
@@ -90,9 +76,13 @@ class OpportunityService {
       const headers = {
         Authorization: `Bearer ${idToken}`,
       };
-      const response = await this.api.post("/opportunities", opportunityData, {
-        headers,
-      });
+      const response = await this.api.post(
+        "/api/SalesOpportunities",
+        opportunityData,
+        {
+          headers,
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error creating opportunity:", error);
@@ -107,8 +97,8 @@ class OpportunityService {
       const headers = {
         Authorization: `Bearer ${idToken}`,
       };
-      const response = await this.api.put(
-        `/opportunities/${id}`,
+      const response = await this.api.patch(
+        `/api/SalesOpportunities/${id}`,
         opportunityData,
         {
           headers,
@@ -128,7 +118,7 @@ class OpportunityService {
       const headers = {
         Authorization: `Bearer ${idToken}`,
       };
-      const response = await this.api.delete(`/opportunities/${id}`, {
+      const response = await this.api.delete(`/api/SalesOpportunities/${id}`, {
         headers,
       });
       return response.data;

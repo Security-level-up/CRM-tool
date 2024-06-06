@@ -10,28 +10,58 @@ import {
   FormLabel,
   FormControl,
   useColorMode,
+  FormErrorMessage,
 } from "@chakra-ui/react";
+import opportunityService from "../services/opportunityService";
 
 const ViewOpp = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const cardDetails = location.state.cardDetails || {};
 
-  const [title, setTitle] = useState(cardDetails.Title || "");
-  const [amount, setAmount] = useState(cardDetails.Amount || "");
+  const [title, setTitle] = useState(cardDetails.title || "");
+  const [amount, setAmount] = useState(cardDetails.amount || "");
   const [probability, setProbability] = useState(
-    cardDetails.ProbOfCompletion || ""
+    cardDetails.probOfCompletion || ""
   );
-  const [stage, setStage] = useState(cardDetails.Stage || "");
-  const [dateClosed, setDateClosed] = useState(cardDetails.DateClosed || "");
-  const [dateCreated, setDateCreated] = useState(cardDetails.DateCreated || "");
-  const [assignedTo, setAssignedTo] = useState(cardDetails.AssignedTo || "");
-  const [notes, setNotes] = useState(cardDetails.Notes || "");
+  const [probabilityError, setProbabilityError] = useState("");
+  const [stage, setStage] = useState(cardDetails.stage || "");
+  const [dateClosed, setDateClosed] = useState(cardDetails.dateClosed || "");
+  const [dateCreated, setDateCreated] = useState(cardDetails.dateCreated || "");
+  const [assignedTo, setAssignedTo] = useState(cardDetails.user.username || "");
+  const [notes, setNotes] = useState(cardDetails.notes || "");
 
   const { colorMode } = useColorMode();
 
+  const handleProbabilityChange = (e) => {
+    const value = e.target.value;
+    setProbability(value);
+
+    // Check if the value is a valid number and within the range
+    const numberValue = parseFloat(value);
+    if (isNaN(numberValue) || numberValue < 0.1 || numberValue > 1) {
+      setProbabilityError("Please enter a number between 0.1 and 1");
+    } else {
+      setProbabilityError("");
+    }
+  };
+
   const handleSave = async () => {
     try {
+      const request = {
+        title: title,
+        probOfCompletion: probability,
+        amount: amount,
+        dateCreated: dateCreated,
+        stage: stage,
+        notes: notes,
+      };
+      console.log("request: ", request);
+      const response = await opportunityService.updateOpportunity(
+        cardDetails.opportunityID,
+        request
+      );
+      console.log("Save success (web)", response.data);
       navigate(`/`);
     } catch (error) {
       console.error("Post Failed:", error.message);
@@ -40,10 +70,13 @@ const ViewOpp = () => {
 
   const handleDelete = async () => {
     try {
-      console.log("Delete success");
+      const response = await opportunityService.deleteOpportunity(
+        cardDetails.opportunityID
+      );
+      console.log("Delete success (web)", response.data);
       navigate(`/`);
     } catch (error) {
-      console.error("Failed to delete item:", error);
+      console.error("Post Failed:", error.message);
     }
   };
 
@@ -118,7 +151,7 @@ const ViewOpp = () => {
             gap="2vh"
             color="black"
           >
-            <FormControl isRequired width="100%" p="1vh" gap="1vh">
+            <FormControl isReadOnly width="100%" p="1vh" gap="1vh">
               <FormLabel>Assigned To</FormLabel>
               <Input
                 bg="brand.grey"
@@ -128,7 +161,7 @@ const ViewOpp = () => {
               />
             </FormControl>
 
-            <FormControl width="100%" p="1vh" gap="1vh">
+            <FormControl isRequired width="100%" p="1vh" gap="1vh">
               <FormLabel>Stage</FormLabel>
               <Select
                 bg="brand.grey"
@@ -164,7 +197,7 @@ const ViewOpp = () => {
             gap="2vh"
             color="black"
           >
-            <FormControl width="100%" p="1vh" gap="1vh">
+            <FormControl isRequired width="100%" p="1vh" gap="1vh">
               <FormLabel>Expected Amount</FormLabel>
               <Input
                 bg="brand.grey"
@@ -174,14 +207,17 @@ const ViewOpp = () => {
               />
             </FormControl>
 
-            <FormControl width="100%" p="1vh" gap="1vh">
+            <FormControl isRequired width="100%" p="1vh" gap="1vh">
               <FormLabel>Probability Of Completion</FormLabel>
               <Input
                 bg="brand.grey"
                 type="text"
                 value={probability}
-                onChange={(e) => setProbability(e.target.value)}
+                onChange={handleProbabilityChange}
               />
+              {probabilityError && (
+                <FormErrorMessage>{probabilityError}</FormErrorMessage>
+              )}
             </FormControl>
           </Flex>
 
