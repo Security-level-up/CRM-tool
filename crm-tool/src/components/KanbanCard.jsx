@@ -21,7 +21,7 @@ const KanbanCard = ({ cardDetails, index }) => {
 
         const tokenParts = idToken.split(".");
         const payload = JSON.parse(atob(tokenParts[1]));
-        const fetchedUserRole = payload["cognito:groups"][1];
+        const fetchedUserRole = payload["cognito:groups"][0];
         setUserRole(fetchedUserRole);
       } catch (error) {
         console.error("Error retrieving user role:", error);

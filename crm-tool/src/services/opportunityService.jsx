@@ -6,7 +6,7 @@ class OpportunityService {
     this.opportunityId = null;
 
     this.api = axios.create({
-      baseURL: import.meta.env.VITE_BASE_API_URL,
+      baseURL: "https://localhost:7173/api",
       withCredentials: false,
     });
 
@@ -89,7 +89,7 @@ class OpportunityService {
         Authorization: `Bearer ${idToken}`,
       };
       const response = await this.api.post(
-        "/SalesOpportunities",
+        "/SalesOpportunities/personalSalesOpportunity",
         opportunityData,
         {
           headers,

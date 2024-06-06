@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Box, Heading, Flex } from "@chakra-ui/react";
+import { useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useNavigate } from "react-router-dom";
 import KanbanCard from "../components/KanbanCard";
@@ -7,20 +8,36 @@ import opportunityService from "../services/opportunityService";
 import "./KanbanBoard.css";
 
 const KanbanBoard = ({ data }) => {
+  const [opportunities, setOpportunities] = useState(data);
   const navigate = useNavigate();
+
+  function getCurrentDateTime() {
+    const now = new Date();
+    return now.toLocaleString();
+  }
+
   const onDragEnd = async (result) => {
+    console.log(data);
     try {
-      const request = {
-        stage: result.destination.droppableId,
-      };
-      await opportunityService.updateOpportunity(result.draggableId, request);
-      // UPDATE DATA LOCALLY SO DONT HAVE TO REFRESH
-      // const draggedCard = data.find(
-      //   (cardDetails) => cardDetails.opportunityID === result.draggableId
-      // );
-      // let temp = data.filter((card) => card !== draggedCard);
-      // draggedCard.stage = result.destination.droppableId;
-      // temp.push(draggedCard);
+      if (result.destination.droppableId === 5) {
+        const request = {
+          stage: result.destination.droppableId,
+          closedDate: getCurrentDateTime(),
+        };
+        await opportunityService.updateOpportunity(result.draggableId, request);
+      } else {
+        const request = {
+          stage: result.destination.droppableId,
+        };
+        await opportunityService.updateOpportunity(result.draggableId, request);
+      }
+      const draggedCard = opportunities.find(
+        (cardDetails) => cardDetails.opportunityID == result.draggableId
+      );
+      let temp = opportunities.filter((card) => card !== draggedCard);
+      draggedCard.stage = result.destination.droppableId;
+      temp.push(draggedCard);
+      setOpportunities(temp);
       navigate(`/`);
     } catch (error) {
       console.error("Post Failed:", error.message);
@@ -55,6 +72,7 @@ const KanbanBoard = ({ data }) => {
                     flexDir="column"
                     justify="center"
                     align="center"
+                    className="scroll"
                   >
                     {data
                       .filter((cardDetails) => cardDetails.stage === 1)
@@ -67,9 +85,7 @@ const KanbanBoard = ({ data }) => {
                       ))}
 
                     {data.filter((cardDetails) => cardDetails.stage === 1)
-                      .length === 0 && (
-                      <Box className="placeholder">No items to display</Box>
-                    )}
+                      .length === 0 && <Box className="placeholder"></Box>}
                     {provided.placeholder}
                   </Flex>
                 )}
@@ -102,6 +118,7 @@ const KanbanBoard = ({ data }) => {
                     flexDir="column"
                     justify="center"
                     align="center"
+                    className="scroll"
                   >
                     {data
                       .filter((cardDetails) => cardDetails.stage === 2)
@@ -114,9 +131,7 @@ const KanbanBoard = ({ data }) => {
                       ))}
                     {provided.placeholder}
                     {data.filter((cardDetails) => cardDetails.stage === 2)
-                      .length === 0 && (
-                      <Box className="placeholder">No items to display</Box>
-                    )}
+                      .length === 0 && <Box className="placeholder"></Box>}
                   </Flex>
                 )}
               </Droppable>
@@ -148,6 +163,7 @@ const KanbanBoard = ({ data }) => {
                     flexDir="column"
                     justify="center"
                     align="center"
+                    className="scroll"
                   >
                     {data
                       .filter((cardDetails) => cardDetails.stage === 3)
@@ -160,9 +176,7 @@ const KanbanBoard = ({ data }) => {
                       ))}
                     {provided.placeholder}
                     {data.filter((cardDetails) => cardDetails.stage === 3)
-                      .length === 0 && (
-                      <Box className="placeholder">No items to display</Box>
-                    )}
+                      .length === 0 && <Box className="placeholder"></Box>}
                   </Flex>
                 )}
               </Droppable>
@@ -193,6 +207,7 @@ const KanbanBoard = ({ data }) => {
                     flexDir="column"
                     justify="center"
                     align="center"
+                    className="scroll"
                   >
                     {data
                       .filter((cardDetails) => cardDetails.stage === 4)
@@ -205,9 +220,7 @@ const KanbanBoard = ({ data }) => {
                       ))}
                     {provided.placeholder}
                     {data.filter((cardDetails) => cardDetails.stage === 4)
-                      .length === 0 && (
-                      <Box className="placeholder">No items to display</Box>
-                    )}
+                      .length === 0 && <Box className="placeholder"></Box>}
                   </Flex>
                 )}
               </Droppable>
@@ -238,6 +251,7 @@ const KanbanBoard = ({ data }) => {
                     flexDir="column"
                     justify="center"
                     align="center"
+                    className="scroll"
                   >
                     {data
                       .filter((cardDetails) => cardDetails.stage === 5)
@@ -250,9 +264,7 @@ const KanbanBoard = ({ data }) => {
                       ))}
                     {provided.placeholder}
                     {data.filter((cardDetails) => cardDetails.stage === 5)
-                      .length === 0 && (
-                      <Box className="placeholder">No items to display</Box>
-                    )}
+                      .length === 0 && <Box className="placeholder"></Box>}
                   </Flex>
                 )}
               </Droppable>

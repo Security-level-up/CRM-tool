@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SideNav from "../components/SideNav";
 import {
   Input,
@@ -13,6 +13,7 @@ import {
   FormErrorMessage,
 } from "@chakra-ui/react";
 import opportunityService from "../services/opportunityService";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 const ViewOpp = () => {
   const navigate = useNavigate();
@@ -30,8 +31,34 @@ const ViewOpp = () => {
   const [dateCreated, setDateCreated] = useState(cardDetails.dateCreated || "");
   const [assignedTo, setAssignedTo] = useState(cardDetails.user.username || "");
   const [notes, setNotes] = useState(cardDetails.notes || "");
+  const [canEdit, setCanEdit] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   const { colorMode } = useColorMode();
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const idToken = (await fetchAuthSession()).tokens?.idToken?.toString();
+
+        if (!idToken) {
+          throw new Error("ID token not found.");
+        }
+
+        const tokenParts = idToken.split(".");
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const fetchedUserRole = payload["cognito:groups"][0];
+        setUserRole(fetchedUserRole);
+        if (userRole === "Manager") {
+          setCanEdit(true);
+        }
+      } catch (error) {
+        console.error("Error retrieving user role:", error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
 
   const handleProbabilityChange = (e) => {
     const value = e.target.value;
@@ -136,6 +163,7 @@ const ViewOpp = () => {
               fontSize="2rem"
               fontWeight="600"
               height="10vh"
+              maxLength="25"
               p="0"
               type="text"
               value={title}
@@ -202,6 +230,7 @@ const ViewOpp = () => {
               <Input
                 bg="brand.grey"
                 type="text"
+                maxLength="10"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />
@@ -212,6 +241,7 @@ const ViewOpp = () => {
               <Input
                 bg="brand.grey"
                 type="text"
+                maxLength="100"
                 value={probability}
                 onChange={handleProbabilityChange}
               />
@@ -267,6 +297,7 @@ const ViewOpp = () => {
             <Textarea
               bg="brand.grey"
               value={notes}
+              maxLength="250"
               onChange={(e) => setNotes(e.target.value)}
             />
           </FormControl>
@@ -282,6 +313,7 @@ const ViewOpp = () => {
               bg="brand.red"
               color="brand.white"
               borderRadius="0"
+              isDisabled={!canEdit}
               onClick={handleDelete}
             >
               Delete
@@ -291,6 +323,7 @@ const ViewOpp = () => {
               color="brand.white"
               borderRadius="0"
               onClick={handleSave}
+              isDisabled={!canEdit}
             >
               Save
             </Button>

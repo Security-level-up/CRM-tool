@@ -9,19 +9,20 @@ import {
   Flex,
   FormLabel,
   FormControl,
-  useColorMode
+  useColorMode,
+  IconButton,
 } from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
 import opportunityService from "../services/opportunityService";
 
 const ViewOpp = () => {
   const navigate = useNavigate();
-  const [title, setTitle] = useState("New Opportunity Title");
+  const [title, setTitle] = useState("New Opportunity");
   const [amount, setAmount] = useState("");
   const [probability, setProbability] = useState("");
   const [stage, setStage] = useState("1");
   const [dateClosed, setDateClosed] = useState("");
   const [dateCreated, setDateCreated] = useState(getCurrentDateTime());
-  const [assignedTo, setAssignedTo] = useState("");
   const [notes, setNotes] = useState("");
 
   const { colorMode } = useColorMode();
@@ -38,9 +39,8 @@ const ViewOpp = () => {
         probOfCompletion: parseInt(probability),
         amount: parseInt(amount),
         dateCreated: new Date(dateCreated).toISOString(),
-        assignedTo: parseInt(assignedTo),
         stage: parseInt(stage),
-        notes: notes
+        notes: notes,
       };
       console.log("request: ", request);
       const response = await opportunityService.createOpportunity(request);
@@ -83,14 +83,14 @@ const ViewOpp = () => {
           boxShadow="md"
         >
           <Flex width="100%" justify="flex-end">
-            <Button
+            <IconButton
               bg="brand.purple"
               color="brand.white"
               borderRadius="0"
               onClick={handleQuit}
-            >
-              Close
-            </Button>
+              icon={<CloseIcon />}
+              aria-label="Close"
+            />
           </Flex>
 
           <FormControl
@@ -110,7 +110,7 @@ const ViewOpp = () => {
               p="0"
               type="text"
               value={title}
-              onChange={e => setTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </FormControl>
 
@@ -122,24 +122,13 @@ const ViewOpp = () => {
             gap="2vh"
             color="black"
           >
-            <FormControl isRequired width="100%" p="1vh" gap="1vh">
-              <FormLabel>Assigned To</FormLabel>
-              <Input
-                bg="brand.grey"
-                type="text"
-                placeholder="Enter Sales Representative"
-                value={assignedTo}
-                onChange={e => setAssignedTo(e.target.value)}
-              />
-            </FormControl>
-
             <FormControl width="100%" p="1vh" gap="1vh">
               <FormLabel>Stage</FormLabel>
               <Select
                 bg="brand.grey"
                 id="stage"
                 value={stage}
-                onChange={e => setStage(e.target.value)}
+                onChange={(e) => setStage(e.target.value)}
                 cursor="pointer"
               >
                 <option color="black" value={1} className="dropdown-new">
@@ -173,10 +162,11 @@ const ViewOpp = () => {
               <FormLabel>Expected Amount</FormLabel>
               <Input
                 bg="brand.grey"
+                color="brand.black"
                 type="number"
                 placeholder="R0"
                 value={amount}
-                onChange={e => setAmount(e.target.value)}
+                onChange={(e) => setAmount(e.target.value)}
               />
             </FormControl>
 
@@ -185,11 +175,13 @@ const ViewOpp = () => {
               <Input
                 bg="brand.grey"
                 type="number"
-                min="0"
-                max="100"
-                placeholder="0%"
+                color="brand.black"
+                min="0.1"
+                max="1"
+                step="0.01"
+                placeholder="0.1 - 1"
                 value={probability}
-                onChange={e => setProbability(e.target.value)}
+                onChange={(e) => setProbability(e.target.value)}
               />
             </FormControl>
           </Flex>
@@ -212,9 +204,10 @@ const ViewOpp = () => {
               <FormLabel>Date Created</FormLabel>
               <Input
                 bg="brand.grey"
+                color="brand.black"
                 type="text"
                 value={dateCreated}
-                onChange={e => setDateCreated(e.target.value)}
+                onChange={(e) => setDateCreated(e.target.value)}
               />
             </FormControl>
 
@@ -228,9 +221,10 @@ const ViewOpp = () => {
               <FormLabel>Date Closed</FormLabel>
               <Input
                 bg="brand.grey"
+                color="brand.black"
                 type="text"
                 value={dateClosed}
-                onChange={e => setDateClosed(e.target.value)}
+                onChange={(e) => setDateClosed(e.target.value)}
               />
             </FormControl>
           </Flex>
@@ -239,10 +233,11 @@ const ViewOpp = () => {
             <FormLabel>Notes</FormLabel>
             <Textarea
               bg="brand.grey"
+              color="brand.black"
               placeholder="Type your notes here"
               value={notes}
               maxLength="250"
-              onChange={e => setNotes(e.target.value)}
+              onChange={(e) => setNotes(e.target.value)}
             />
           </FormControl>
           <Flex
@@ -258,6 +253,7 @@ const ViewOpp = () => {
               color="brand.white"
               borderRadius="0"
               onClick={handleSave}
+              isDisabled={!isFormValid}
             >
               Save
             </Button>

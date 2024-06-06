@@ -14,6 +14,7 @@ const Pipeline = () => {
   const [userRole, setUserRole] = useState(null);
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [canCreate, setCanCreate] = useState(false);
 
   useEffect(() => {
     const postLogin = async () => {
@@ -40,8 +41,13 @@ const Pipeline = () => {
 
         const tokenParts = idToken.split(".");
         const payload = JSON.parse(atob(tokenParts[1]));
-        const fetchedUserRole = payload["cognito:groups"][1];
+        const fetchedUserRole = payload["cognito:groups"][0];
         setUserRole(fetchedUserRole);
+        console.log("fetching:", payload["cognito:groups"][0]);
+        if (userRole === "SalesRep" || userRole === "Manager") {
+          console.log("user is salesRep or manager");
+          setCanCreate(true);
+        }
       } catch (error) {
         console.error("Error retrieving user role:", error);
       }
@@ -112,6 +118,7 @@ const Pipeline = () => {
             bg="brand.orange"
             color="brand.white"
             onClick={handleNew}
+            isDisabled={!canCreate}
           >
             <img src={add_circle} alt="add opportunity icon" />
             Add New
