@@ -11,6 +11,7 @@ import {
   FormControl,
   useColorMode,
 } from "@chakra-ui/react";
+import opportunityService from "../services/opportunityService";
 
 const ViewOpp = () => {
   const navigate = useNavigate();
@@ -32,6 +33,17 @@ const ViewOpp = () => {
 
   const handleSave = async () => {
     try {
+      const request = {
+        title: title,
+        probOfCompletion: probability,
+        amount: amount,
+        dateCreated: dateCreated,
+        stage: stage,
+        notes: notes,
+      };
+      console.log("request: ", request);
+      const response = await opportunityService.createOpportunity(request);
+      console.log("Save success (web)", response.data);
       navigate(`/`);
     } catch (error) {
       console.error("Post Failed:", error.message);

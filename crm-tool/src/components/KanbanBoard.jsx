@@ -1,14 +1,30 @@
 /* eslint-disable react/prop-types */
 import { Box, Heading, Flex } from "@chakra-ui/react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useNavigate } from "react-router-dom";
 import KanbanCard from "../components/KanbanCard";
+import opportunityService from "../services/opportunityService";
 import "./KanbanBoard.css";
 
 const KanbanBoard = ({ data }) => {
-  console.log(data);
+  const navigate = useNavigate();
   const onDragEnd = async (result) => {
-    //update stage with patch endpoint
-    console.log(result);
+    try {
+      const request = {
+        stage: result.destination.droppableId,
+      };
+      await opportunityService.updateOpportunity(result.draggableId, request);
+      // UPDATE DATA LOCALLY SO DONT HAVE TO REFRESH
+      // const draggedCard = data.find(
+      //   (cardDetails) => cardDetails.opportunityID === result.draggableId
+      // );
+      // let temp = data.filter((card) => card !== draggedCard);
+      // draggedCard.stage = result.destination.droppableId;
+      // temp.push(draggedCard);
+      navigate(`/`);
+    } catch (error) {
+      console.error("Post Failed:", error.message);
+    }
   };
   return (
     <Box>
