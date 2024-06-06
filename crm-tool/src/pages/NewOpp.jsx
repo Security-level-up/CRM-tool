@@ -9,7 +9,7 @@ import {
   Flex,
   FormLabel,
   FormControl,
-  useColorMode,
+  useColorMode
 } from "@chakra-ui/react";
 import opportunityService from "../services/opportunityService";
 
@@ -35,11 +35,12 @@ const ViewOpp = () => {
     try {
       const request = {
         title: title,
-        probOfCompletion: probability,
-        amount: amount,
-        dateCreated: dateCreated,
-        stage: stage,
-        notes: notes,
+        probOfCompletion: parseInt(probability),
+        amount: parseInt(amount),
+        dateCreated: new Date(dateCreated).toISOString(),
+        assignedTo: parseInt(assignedTo),
+        stage: parseInt(stage),
+        notes: notes
       };
       console.log("request: ", request);
       const response = await opportunityService.createOpportunity(request);
@@ -109,7 +110,7 @@ const ViewOpp = () => {
               p="0"
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={e => setTitle(e.target.value)}
             />
           </FormControl>
 
@@ -128,7 +129,7 @@ const ViewOpp = () => {
                 type="text"
                 placeholder="Enter Sales Representative"
                 value={assignedTo}
-                onChange={(e) => setAssignedTo(e.target.value)}
+                onChange={e => setAssignedTo(e.target.value)}
               />
             </FormControl>
 
@@ -138,7 +139,7 @@ const ViewOpp = () => {
                 bg="brand.grey"
                 id="stage"
                 value={stage}
-                onChange={(e) => setStage(e.target.value)}
+                onChange={e => setStage(e.target.value)}
                 cursor="pointer"
               >
                 <option color="black" value={1} className="dropdown-new">
@@ -175,7 +176,7 @@ const ViewOpp = () => {
                 type="number"
                 placeholder="R0"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={e => setAmount(e.target.value)}
               />
             </FormControl>
 
@@ -188,7 +189,7 @@ const ViewOpp = () => {
                 max="100"
                 placeholder="0%"
                 value={probability}
-                onChange={(e) => setProbability(e.target.value)}
+                onChange={e => setProbability(e.target.value)}
               />
             </FormControl>
           </Flex>
@@ -213,7 +214,7 @@ const ViewOpp = () => {
                 bg="brand.grey"
                 type="text"
                 value={dateCreated}
-                onChange={(e) => setDateCreated(e.target.value)}
+                onChange={e => setDateCreated(e.target.value)}
               />
             </FormControl>
 
@@ -229,7 +230,7 @@ const ViewOpp = () => {
                 bg="brand.grey"
                 type="text"
                 value={dateClosed}
-                onChange={(e) => setDateClosed(e.target.value)}
+                onChange={e => setDateClosed(e.target.value)}
               />
             </FormControl>
           </Flex>
@@ -241,7 +242,7 @@ const ViewOpp = () => {
               placeholder="Type your notes here"
               value={notes}
               maxLength="250"
-              onChange={(e) => setNotes(e.target.value)}
+              onChange={e => setNotes(e.target.value)}
             />
           </FormControl>
           <Flex
