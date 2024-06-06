@@ -4,9 +4,9 @@ import { fetchAuthSession } from "aws-amplify/auth";
 class OpportunityService {
   constructor() {
     this.opportunityId = null;
+
     this.api = axios.create({
-      baseURL:
-        "https://qjf50l3iz6.execute-api.eu-west-1.amazonaws.com/Production/api",
+      baseURL: import.meta.env.VITE_BASE_API_URL,
       withCredentials: false,
     });
 
