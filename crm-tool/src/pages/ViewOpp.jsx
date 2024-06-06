@@ -58,7 +58,7 @@ const ViewOpp = () => {
     };
 
     fetchUserRole();
-  }, []);
+  }, [userRole]);
 
   const handleProbabilityChange = (e) => {
     const value = e.target.value;

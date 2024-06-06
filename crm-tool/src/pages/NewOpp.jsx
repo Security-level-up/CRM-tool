@@ -253,7 +253,6 @@ const ViewOpp = () => {
               color="brand.white"
               borderRadius="0"
               onClick={handleSave}
-              isDisabled={!isFormValid}
             >
               Save
             </Button>

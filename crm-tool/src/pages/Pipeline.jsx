@@ -14,7 +14,7 @@ const Pipeline = () => {
   const [userRole, setUserRole] = useState(null);
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [canCreate, setCanCreate] = useState(false);
+  const [canCreate, setCanCreate] = useState(true);
 
   useEffect(() => {
     const postLogin = async () => {
@@ -44,9 +44,10 @@ const Pipeline = () => {
         const fetchedUserRole = payload["cognito:groups"][0];
         setUserRole(fetchedUserRole);
         console.log("fetching:", payload["cognito:groups"][0]);
-        if (userRole === "SalesRep" || userRole === "Manager") {
-          console.log("user is salesRep or manager");
+        if (userRole == "SalesRep" || userRole == "Manager") {
           setCanCreate(true);
+        } else {
+          setCanCreate(false);
         }
       } catch (error) {
         console.error("Error retrieving user role:", error);
@@ -54,7 +55,7 @@ const Pipeline = () => {
     };
 
     fetchUserRole();
-  }, []);
+  }, [userRole]);
 
   useEffect(() => {
     const fetchSalesOpportunities = async () => {
@@ -88,8 +89,6 @@ const Pipeline = () => {
         console.log("user is manager or general user");
         fetchSalesOpportunities();
       } else if (userRole === "SalesRep") {
-        console.log("user is salesRep");
-        // RETURNING 404
         fetchSalesOpportunitiesCurrentUser();
       }
     }

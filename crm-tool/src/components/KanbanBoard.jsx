@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { Box, Heading, Flex } from "@chakra-ui/react";
-import { useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useNavigate } from "react-router-dom";
 import KanbanCard from "../components/KanbanCard";
@@ -8,7 +7,6 @@ import opportunityService from "../services/opportunityService";
 import "./KanbanBoard.css";
 
 const KanbanBoard = ({ data }) => {
-  const [opportunities, setOpportunities] = useState(data);
   const navigate = useNavigate();
 
   function getCurrentDateTime() {
@@ -17,7 +15,6 @@ const KanbanBoard = ({ data }) => {
   }
 
   const onDragEnd = async (result) => {
-    console.log(data);
     try {
       if (result.destination.droppableId === 5) {
         const request = {
@@ -31,13 +28,13 @@ const KanbanBoard = ({ data }) => {
         };
         await opportunityService.updateOpportunity(result.draggableId, request);
       }
-      const draggedCard = opportunities.find(
-        (cardDetails) => cardDetails.opportunityID == result.draggableId
-      );
-      let temp = opportunities.filter((card) => card !== draggedCard);
-      draggedCard.stage = result.destination.droppableId;
-      temp.push(draggedCard);
-      setOpportunities(temp);
+      // const draggedCard = data.find(
+      //   (cardDetails) => cardDetails.opportunityID == result.draggableId
+      // );
+      // let temp = data.filter((card) => card !== draggedCard);
+      // draggedCard.stage = result.destination.droppableId;
+      // temp.push(draggedCard);
+      // data = temp;
       navigate(`/`);
     } catch (error) {
       console.error("Post Failed:", error.message);

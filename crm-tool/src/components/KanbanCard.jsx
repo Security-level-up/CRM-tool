@@ -29,7 +29,7 @@ const KanbanCard = ({ cardDetails, index }) => {
     };
 
     fetchUserRole();
-  }, []);
+  }, [userRole]);
 
   const openPopUp = (cardDetails) => {
     if (userRole === "SalesRep" || userRole === "Manager") {
